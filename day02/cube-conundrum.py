@@ -13,8 +13,8 @@ dice_limits = {
 combination_pattern = r"(\d+) (red|green|blue)"
 
 
-def play_round(record):
-    header, dice_sets = record.split(":")
+def play_round(round):
+    header, dice_sets = round.split(":")
     for dice_set in dice_sets.split(";"):
         for amount, color in re.findall(combination_pattern, dice_set):
             if int(amount) > dice_limits[color]:
@@ -22,8 +22,8 @@ def play_round(record):
     return int(re.search(r"\d+", header).group())
 
 
-def play_round_fewest_cubes(record):
-    _, dice_sets = record.split(":")
+def play_round_fewest_cubes(round):
+    _, dice_sets = round.split(":")
     dice = {}
     for dice_set in dice_sets.split(";"):
         for amount, color in re.findall(combination_pattern, dice_set):

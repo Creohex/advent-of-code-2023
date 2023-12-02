@@ -27,8 +27,7 @@ def play_round_fewest_cubes(record):
     dice = {}
     for dice_set in dice_sets.split(";"):
         for amount, color in re.findall(combination_pattern, dice_set):
-            amount = int(amount)
-            dice[color] = max(dice[color], amount) if color in dice else amount
+            dice[color] = max(dice.get(color, 0), int(amount))
     return reduce(lambda a, b: a * b, dice.values())
 
 

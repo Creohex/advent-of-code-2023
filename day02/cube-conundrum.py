@@ -1,3 +1,5 @@
+#!python
+
 import re
 from functools import reduce
 

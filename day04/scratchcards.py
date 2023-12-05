@@ -4,8 +4,9 @@ from functools import reduce
 
 with open("./input", "r") as f:
     cards = list(map(lambda nums: reduce(lambda w, a: len(set(w).intersection(a)), nums),
-                     map(lambda raw_split: [_.strip().split() for _ in raw_split],
-                         map(lambda raw: raw.split(":")[1].split("|"), f.readlines()))))
+                     map(lambda raw: (_.strip().split() for _
+                                      in raw.split(":")[1].split("|")),
+                         f.readlines())))
 
 # part 1:
 print(sum(1 if wins == 1 else 2 ** (wins - 1) if wins > 1 else 0 for wins in cards))

@@ -1,29 +1,18 @@
 #!python
 
-def count_points(cards):
-    points = 0
-    for winning, actual in cards:
-        amount = len(winning.intersection(actual))
-        points += 1 if amount == 1 else 2 ** (amount - 1) if amount > 1 else 0
-    return points
-
-def count_compounding_cards(cards):
-    cards_in_play = [1 for _ in cards]
-    for i, (winning, actual) in enumerate(cards):
-        amount_won = len(winning.intersection(actual))
-        if amount_won:
-            for di in range(i + 1, i + 1 + amount_won):
-                cards_in_play[di] += cards_in_play[i]
-    return sum(cards_in_play)
-
+from functools import reduce
 
 with open("./input", "r") as f:
-    cards = [tuple(map(set, map(lambda c: c.strip().split(),
-                                card.split(":")[1].split("|"))))
-            for card in f.readlines()]
+    cards = list(map(lambda nums: reduce(lambda w, a: len(set(w).intersection(a)), nums),
+                     map(lambda raw_split: [_.strip().split() for _ in raw_split],
+                         map(lambda raw: raw.split(":")[1].split("|"), f.readlines()))))
 
 # part 1:
-print(count_points(cards))
+print(sum(1 if wins == 1 else 2 ** (wins - 1) if wins > 1 else 0 for wins in cards))
 
 # part 2:
-print(count_compounding_cards(cards))
+cards_in_play = [1] * len(cards)
+for i, wins in enumerate(cards):
+    for di in range(i + 1, i + 1 + wins):
+        cards_in_play[di] += cards_in_play[i]
+print(sum(cards_in_play))

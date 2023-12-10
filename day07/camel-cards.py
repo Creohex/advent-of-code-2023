@@ -15,7 +15,7 @@ class Hand:
             if cards:
                 max_cards = max(cards.values())
                 jocker_type = max(filter(lambda card: cards[card] == max_cards, cards),
-                                key=lambda c_type: card_order.index(c_type))
+                                  key=lambda c_type: card_order.index(c_type))
                 cards[jocker_type] += jockers
             else:
                 cards[card_order[-1]] = jockers

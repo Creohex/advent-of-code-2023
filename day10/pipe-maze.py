@@ -1,3 +1,5 @@
+#!python
+
 steps = {
     "up": (0, -1),
     "down": (0, 1),

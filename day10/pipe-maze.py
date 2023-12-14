@@ -1,6 +1,3 @@
-#!python
-
-
 steps = {
     "up": (0, -1),
     "down": (0, 1),
@@ -38,7 +35,13 @@ side_map = {
 """Left/Right coord offsets depending on segment type and movement direction."""
 
 
-def visualize(pipe_map, path: list=None, current_pos: tuple=None, inner=None, outer=None):
+def visualize(
+    pipe_map: list,
+    path: list = None,
+    current_pos: tuple = None,
+    inner: list = None,
+    outer: list = None,
+):
     m = list(map(list, pipe_map))
     for sign, coords in {
         "#": path or [],
@@ -53,7 +56,8 @@ def visualize(pipe_map, path: list=None, current_pos: tuple=None, inner=None, ou
                 pass
     list(map(lambda _: print("".join(_)), m + ["-" * 12]))
 
-def explore_loop(pipe_map) -> list:
+
+def explore_loop(pipe_map: list) -> list:
     def find_start() -> tuple:
         for y in range(len(pipe_map)):
             for x in range(len(pipe_map[0])):
@@ -71,9 +75,9 @@ def explore_loop(pipe_map) -> list:
     def next_pipe(current: tuple, previous: tuple) -> tuple:
         x, y = current
         next_coords = connectors[pipe_map[y][x]]
-        dx, dy = next_coords[0 if previous == (x + next_coords[1][0],
-                                               y + next_coords[1][1])
-                             else 1]
+        dx, dy = next_coords[
+            0 if previous == (x + next_coords[1][0], y + next_coords[1][1]) else 1
+        ]
         return x + dx, y + dy
 
     start = find_start()
@@ -84,7 +88,8 @@ def explore_loop(pipe_map) -> list:
 
     return path
 
-def find_enclosed_tiles(pipe_map: list, main_loop:list) -> int:
+
+def find_enclosed_tiles(pipe_map: list, main_loop: list) -> int:
     l = set()
     r = set()
 
@@ -109,7 +114,7 @@ def find_enclosed_tiles(pipe_map: list, main_loop:list) -> int:
             if r_coord not in main_loop:
                 r.add(r_coord)
 
-    def expand_areas(coords: set):
+    def expand_areas(coords: set) -> None:
         investigated = set()
         to_investigate = set(coords)
         while to_investigate:

@@ -27,7 +27,7 @@ def parse_galaxies(universe: list, distance_multiplicator: int) -> dict:
     return galaxies
 
 
-def calculate_distances(galaxies: dict) -> list:
+def calculate_distances(galaxies: dict) -> int:
     distances = [
         abs(xb - xa) + abs(yb - ya)
         for (xa, ya), (xb, yb) in combinations(galaxies.values(), 2)

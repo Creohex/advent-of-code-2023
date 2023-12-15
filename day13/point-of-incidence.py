@@ -1,57 +1,40 @@
 #!python
 
-from functools import reduce
 
-test = """\
-#.##..##.
-..#.##.#.
-##......#
-##......#
-..#.##.#.
-..##..##.
-#.#.##.#.
-
-#...##..#
-#....#..#
-..##..###
-#####.##.
-#####.##.
-..##..###
-#....#..#"""
-
-
-def find_symmetry(line):
-    indices = set()
-    print("---> ", line)
-    for i in range(1, len(line)):
-        width = min(i, len(line) - i)
-        l, r = line[abs(i - width) : i], line[i : i + i]
-        print(i, line[:i], line[i:], "|", l, r)
-        if l == r[::-1]:
-            indices.add(i)
-    print("symmetry: ", indices)
-    return indices
-
-
-def turn_image(image):
+def turn_image(image: list) -> list:
     return ["".join(image[x][y] for x in range(len(image))) for y in range(len(image[0]))]
 
 
-def solve(image):
-    print("\n".join(image))
+def line_symmetries(line: str) -> set:
+    symmetry_indices = set()
+    for i in range(1, len(line)):
+        width = min(i, len(line) - i)
+        l, r = line[abs(i - width) : i], line[i : i + i]
+        if l == r[::-1]:
+            symmetry_indices.add(i)
+    return symmetry_indices
 
-    axis = reduce(lambda a, b: a.intersection(b), map(find_symmetry, image))
-    if axis:
-        return axis.pop()
 
-    if not axis:
-        axis = reduce(lambda a, b: a.intersection(b), map(find_symmetry, turn_image(image)))
-        return 100 * axis.pop()
+def vertical_symmetry(image: list) -> list:
+    axis = dict()
+    for symmetries in map(line_symmetries, image):
+        for s in symmetries:
+            axis[s] = axis.get(s, 0) + 1
+    return tuple(
+        next((k for k, v in axis.items() if v == i), None)
+        for i in (len(image), len(image) - 1)
+    )
+
+
+def symmetries(image: list) -> tuple:
+    v, v_smudge = vertical_symmetry(image)
+    h, h_smudge = vertical_symmetry(turn_image(image))
+    return (v or 100 * h), (v_smudge or 100 * h_smudge)
 
 
 with open("./input", "r") as f:
-    images = f.read().split("\n\n")
+    images = map(str.split, f.read().split("\n\n"))
 
-
-# part 1:
-print(sum(map(solve, map(str.splitlines, images))))
+symmetry_values = list(map(symmetries, images))
+print(f"Part 1: {sum(full_symmetry for full_symmetry, _ in symmetry_values)}")
+print(f"Part 2: {sum(smudge_symmetries for _, smudge_symmetries in symmetry_values)}")

@@ -29,10 +29,10 @@ reflections = {
 }
 
 
-def propagate_beam(layout: list, start_configuration: tuple = None) -> int:
+def propagate_beam(layout: list, vector: tuple = None) -> int:
     height = len(layout)
     width = len(layout[0])
-    beams = [start_configuration]
+    beams = [vector]
     energized_tiles = set()
 
     while beams:
@@ -56,7 +56,7 @@ with open("./input", "r") as f:
 print(propagate_beam(data, (Coord((0, 0)), right)))
 
 # part 2
-print(max(map(lambda config_gen: propagate_beam(data, start_configuration=config_gen),
+print(max(map(lambda vector: propagate_beam(data, vector=vector),
               chain(((Coord((x, 0)), down) for x in range(len(data[0]))),
                     ((Coord((x, len(data) - 1)), up) for x in range(len(data[0]))),
                     ((Coord((0, y)), right) for y in range(len(data))),

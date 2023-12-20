@@ -1,5 +1,7 @@
 #!python
 
+from collections import defaultdict
+
 
 def turn_image(image: list) -> list:
     return ["".join(image[x][y] for x in range(len(image))) for y in range(len(image[0]))]
@@ -16,12 +18,12 @@ def line_symmetries(line: str) -> set:
 
 
 def vertical_symmetry(image: list) -> list:
-    axis = dict()
+    indices = defaultdict(int)
     for symmetries in map(line_symmetries, image):
         for s in symmetries:
-            axis[s] = axis.get(s, 0) + 1
+            indices[s] += 1
     return tuple(
-        next((k for k, v in axis.items() if v == i), None)
+        next((k for k, v in indices.items() if v == i), None)
         for i in (len(image), len(image) - 1)
     )
 

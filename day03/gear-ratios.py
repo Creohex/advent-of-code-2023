@@ -1,12 +1,13 @@
 #!python
 
 import re
+from collections import defaultdict
 from functools import reduce
 
 
 def find_part_numbers(schematic, symbols):
     directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
-    parts = {}
+    parts = defaultdict(list)
 
     for y, line in enumerate(schematic):
         for part_number in re.finditer(r"\d+", line):
@@ -18,7 +19,7 @@ def find_part_numbers(schematic, symbols):
                     try:
                         coords = (x + dx, y + dy)
                         if schematic[coords[1]][coords[0]] in symbols:
-                            parts[coords] = parts.get(coords, []) + [int(part_number.group())]
+                            parts[coords].append(int(part_number.group()))
                             is_engine_part = True
                             break
                     except IndexError:

@@ -1,6 +1,7 @@
 #!python
 
 import re
+from collections import defaultdict
 from functools import reduce
 
 
@@ -26,10 +27,10 @@ def play_round(round):
 
 def play_round_fewest_cubes(round):
     _, dice_sets = round.split(":")
-    dice = {}
+    dice = defaultdict(int)
     for dice_set in dice_sets.split(";"):
         for amount, color in re.findall(combination_pattern, dice_set):
-            dice[color] = max(dice.get(color, 0), int(amount))
+            dice[color] = max(dice[color], int(amount))
     return reduce(lambda a, b: a * b, dice.values())
 
 
